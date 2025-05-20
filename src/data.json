@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Test Item",
+      "description": "This is a test item",
+      "createdAt": "2025-05-20T05:11:07.867Z"
+    },
+    {
+      "id": 2,
+      "name": "Test Item",
+      "description": "This is a test item",
+      "createdAt": "2025-05-20T05:11:13.544Z"
+    },
+    {
+      "id": 3,
+      "name": "Test Item",
+      "description": "This is a test item",
+      "createdAt": "2025-05-20T05:59:26.336Z"
+    }
+  ],
+  "nextId": 4
+}

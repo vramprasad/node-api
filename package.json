@@ -1,0 +1,17 @@
+{
+  "name": "node-api",
+  "version": "1.0.0",
+  "description": "Simple Node REST API with DB and logging",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ramprasad",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "nedb": "^1.8.0",
+    "node-cache": "^5.1.2"
+  }
+}
