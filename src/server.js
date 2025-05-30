@@ -1,10 +1,11 @@
-// app.js
+// Basic CRUD API 
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dataFile = path.join(__dirname, 'data.json');
+const logger = require('./utils/logger');
 
 // Middleware
 app.use(express.json());
@@ -12,6 +13,8 @@ app.use(express.json());
 // Helper function to read data file
 async function readDataFile() {
   try {
+    logger.info('Reading data file...');
+    logger.info('Data file path:', dataFile)
     const data = await fs.readFile(dataFile, 'utf8');
     return JSON.parse(data);
   } catch (error) {
@@ -25,12 +28,14 @@ async function readDataFile() {
 
 // Helper function to write data file
 async function writeDataFile(data) {
+  logger.info('Writing data file...');
   await fs.writeFile(dataFile, JSON.stringify(data, null, 2), 'utf8');
 }
 
 // Initialize data file if it doesn't exist
 async function initDataFile() {
   try {
+    logger.info('Initialising data file...');
     await fs.access(dataFile);
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -43,8 +48,20 @@ async function initDataFile() {
 initDataFile();
 
 // Routes
+// Healthcheck
+
+app.get('/', (req, res) => {
+    const datePart = new Date().toISOString().split("T")[0]
+    const timePart = new Date().toLocaleString("en-US", {hour12: false}).split(",")[1]
+    const timeStamp = datePart + timePart
+    logger.info("Healthcheck done at : "+timeStamp)
+    return res.status(200).json({ status: 'OK', service: 'Basic', timestamp: timeStamp });
+  
+  });
+
 // GET all items
 app.get('/api/items', async (req, res) => {
+  logger.info('Retrieving items...');
   try {
     const data = await readDataFile();
     res.json(data.items);
@@ -55,6 +72,7 @@ app.get('/api/items', async (req, res) => {
 
 // GET single item by id
 app.get('/api/items/:id', async (req, res) => {
+  logger.info('Retrieving item by ID...');
   try {
     const id = parseInt(req.params.id);
     const data = await readDataFile();
@@ -72,6 +90,7 @@ app.get('/api/items/:id', async (req, res) => {
 
 // POST create new item
 app.post('/api/items', async (req, res) => {
+  logger.info('Creating new item...');
   try {
     const data = await readDataFile();
     const newItem = {
@@ -92,6 +111,7 @@ app.post('/api/items', async (req, res) => {
 
 // PUT update existing item
 app.put('/api/items/:id', async (req, res) => {
+  logger.info('Updating item...');
   try {
     const id = parseInt(req.params.id);
     const data = await readDataFile();
@@ -119,6 +139,7 @@ app.put('/api/items/:id', async (req, res) => {
 
 // DELETE item
 app.delete('/api/items/:id', async (req, res) => {
+  logger.info('Deleting item...');
   try {
     const id = parseInt(req.params.id);
     const data = await readDataFile();
@@ -139,5 +160,5 @@ app.delete('/api/items/:id', async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });
